@@ -13,8 +13,9 @@
 #include <stdint.h>
 
 struct bubble_counters {
-  uint32_t no_last_element;		// actual number of elements in array
-  uint32_t no_elements_to_insert;
+  uint32_t no_free_elements;
+  uint32_t idx;
+  uint32_t last_idx;
   uint32_t swap_count;			// count of swap in array
   uint32_t i,j;				// loop counters
   int32_t state;
@@ -29,10 +30,17 @@ struct Bubble_sort {
 };
 
 int32_t bs_init (struct Bubble_sort *my_sort, int32_t *data, uint32_t size);
-int32_t sm_bubble_sort (struct Bubble_sort *my_sort);
 int32_t bs_is_init(struct Bubble_sort *my_sort);
+int32_t sm_bubble_sort (struct Bubble_sort *my_sort);
+
+int32_t bs_insert(struct Bubble_sort *my_sort, int32_t new_var);
+
+uint32_t bs_get_free(struct Bubble_sort *my_sort);
 uint32_t bs_get_array_size(struct Bubble_sort *my_sort);
-uint32_t bs_get_no_lst_element(struct Bubble_sort *my_sort);
+uint32_t bs_get_lst_idx(struct Bubble_sort *my_sort);
+
+uint32_t bs_update_free(struct Bubble_sort *my_sort, uint32_t update_var);
+int32_t bs_update_lst_idx(struct Bubble_sort *my_sort, uint32_t update_var);
 void bs_show_array (struct Bubble_sort *my_sort);
 
 #endif /* BUBBLE_SORT_H_ */

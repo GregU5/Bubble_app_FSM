@@ -33,8 +33,9 @@ struct app {
 };
 
 int32_t app_init(void);
-int32_t chose_func(struct Bubble_sort *my_sort);
 int32_t app(void);
+int32_t chose_func(struct Bubble_sort *my_sort);
+
 
 
 #endif /* APP_H_ */

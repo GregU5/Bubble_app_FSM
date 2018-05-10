@@ -32,16 +32,35 @@ bs_init(struct Bubble_sort *my_sort, int32_t *data, uint32_t size)
     my_sort->tab = data;
     my_sort->is_sorted = 0;
 
-    my_sort->bs_counter.no_last_element = 0;
-    my_sort->bs_counter.no_elements_to_insert = 128;
+    my_sort->bs_counter.idx = 0;
+    my_sort->bs_counter.no_free_elements = 128;
     my_sort->bs_counter.i = 0; //for BIG_FOR licznik przejść
     my_sort->bs_counter.j = 1; //for LITTLE_FOR licznik elementów
     my_sort->bs_counter.swap_count = 0;
+
+    //my_sort->bs_counter.last_idx = 0;
 
     my_sort->is_init = 1;
     my_sort->bs_counter.state = BIG_FOR;
 
     retval = 0;
+  }
+
+  return retval;
+}
+
+/*
+ * return 1 is bubble struct is inited
+ * return -1 is not inited
+ */
+int32_t
+bs_is_init(struct Bubble_sort *my_sort)
+{
+  int32_t retval;
+  if (my_sort->is_init > 0) {
+    retval = 1;
+  }else {
+    retval = -1;
   }
 
   return retval;
@@ -56,7 +75,7 @@ bs_init(struct Bubble_sort *my_sort, int32_t *data, uint32_t size)
 int32_t sm_bubble_sort(struct Bubble_sort *my_sort) {
 
   int32_t retval = 0;
-  uint32_t number_of_last_element = my_sort->bs_counter.no_last_element;
+  uint32_t number_of_last_element = my_sort->bs_counter.idx;
 
   if (my_sort->is_init != 1) {
       return retval = -1;
@@ -113,24 +132,104 @@ int32_t sm_bubble_sort(struct Bubble_sort *my_sort) {
   return retval;
 }
 
+/*
+ * return -1 not init
+ * return  number of elements
+ */
 int32_t
-bs_is_init(struct Bubble_sort *my_sort)
+bs_insert(struct Bubble_sort *my_sort, int32_t new_var)
 {
   int32_t retval;
-  if (my_sort->is_init > 0) {
-    retval = 1;
-  }else {
-    retval = -1;
+
+  if(bs_is_init(my_sort) < 0) {
+    return retval = -1;
+  }
+  if(my_sort->bs_counter.no_free_elements == 0) {
+    return retval = 0;
   }
 
-  return retval;
+  uint32_t idx = my_sort->bs_counter.idx;
+  my_sort->tab[idx] = new_var;
+
+  my_sort->bs_counter.no_free_elements--;
+  idx++;
+  my_sort->bs_counter.idx = idx;
+
+  return retval = idx;
 }
 
+/*
+ * return free elements
+ * return -1 if struct not init
+ */
+uint32_t
+bs_get_free(struct Bubble_sort *my_sort)
+{
+  uint32_t retval;
+
+  retval = bs_is_init(my_sort);
+  if (retval > 0) {
+    retval = my_sort->bs_counter.no_free_elements;
+  }
+  return retval;
+}
+/* return size of the array */
 uint32_t
 bs_get_array_size(struct Bubble_sort *my_sort)
 {
   uint32_t retval;
-  retval = my_sort->size;
+
+  retval = bs_is_init(my_sort);
+  if (retval > 0) {
+    retval = my_sort->size;
+  }
+  return retval;
+}
+
+/*
+ *function return number of last idx from array
+ */
+uint32_t
+bs_get_lst_idx(struct Bubble_sort *my_sort)
+{
+  uint32_t retval = 0;
+
+  retval = bs_is_init(my_sort);
+  if (retval > 0) {
+    retval = my_sort->bs_counter.idx;
+  }
+  return retval;
+}
+
+/* fuction to update counter of free elements
+ * return 0 updated done
+ * return -1 fail
+ *
+ *  */
+uint32_t
+bs_update_free(struct Bubble_sort *my_sort, uint32_t update_var)
+{
+  uint32_t retval = 0;
+  retval = bs_is_init(my_sort);
+  if(retval > 0) {
+      my_sort->bs_counter.no_free_elements = update_var;
+  }
+  return retval;
+}
+
+/*
+ * function to update last index of array from bubble sort
+ * return 0 update done
+ * return -1 fail
+ */
+int32_t
+bs_update_lst_idx(struct Bubble_sort *my_sort, uint32_t update_var)
+{
+  int32_t retval = 0;
+  retval = bs_is_init(my_sort);
+  if(retval > 0) {
+      my_sort->bs_counter.idx = update_var;
+  }
   return retval;
 }
 
@@ -142,15 +241,16 @@ swap_elements(int32_t *tab1, int32_t *tab2)
   *tab1 = *tab2;
   *tab2 = tmp;
 }
+
 void
 bs_show_array(struct Bubble_sort *my_sort)
 {
-  if (my_sort->bs_counter.no_last_element == 0) {
+  if (my_sort->bs_counter.idx == 0) {
     printf("TABLICA JEST PUSTA!\n");
   }
-  for(int i = 0; i < my_sort->bs_counter.no_last_element; i++) {
+  for(int i = 0; i < my_sort->bs_counter.idx; i++) {
       printf("tablica[%d] = %d\n", i, my_sort->tab[i]);
   }
-  printf("Number of last element: %d\n", my_sort->bs_counter.no_last_element);
-  printf("Number of elements to insert: %d\n", my_sort->bs_counter.no_elements_to_insert);
+  printf("Number of last element: %d\n", my_sort->bs_counter.idx);
+  printf("Number of elements to insert: %d\n", my_sort->bs_counter.no_free_elements);
 }
