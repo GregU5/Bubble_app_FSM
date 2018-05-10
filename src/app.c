@@ -6,7 +6,7 @@
  */
 #include "app.h"
 
-struct app_states app_process;
+struct app g_app_values;
 struct Bubble_sort my_bubbles;
 
 static void show_array(struct Bubble_sort *my_sort);
@@ -16,9 +16,8 @@ app_init(void)
 {
   int32_t retval = 0;
   printf("Program do sortowania bablekowego.\n");
-  app_process.app_state = STATE_INIT;
-  app_process.app_request = 0;
-  app_process.app_last_state = app_process.app_state;
+  g_app_values.state = STATE_INIT;
+  g_app_values.last_state = 0;
 
   return retval;
 }
@@ -28,14 +27,14 @@ app(void)
 {
   int32_t retval = 0;
 
-  switch(app_process.app_state) {
+  switch(g_app_values.state) {
     case STATE_INIT: {
       int32_t is_init = bubble_sort_init(&my_bubbles, array_to_sort, SIZE);
       if(is_init < 0) {
-	app_process.app_state = -1;
+	g_app_values.state = -1;
 	printf("\n BUBBLE STRUCT INIT ERROR\n");
       }else {
-	app_process.app_state = SHOW_MENU;
+	g_app_values.state = SHOW_MENU;
       }
     }
     break;
@@ -45,27 +44,26 @@ app(void)
 	    "r - Dodaj 10 liczb losowych\n"
 	    "a - Podaj jedna liczbe i dodaj do tablicy\n"
 	    "s - Sortuj tablice\n"
-	    "t - Akceptuj/Dalej\n"
 	    "n - Neguj/Cofnij\n"
 	    "d - Wyswietl tablice\n"
 	    );
 
 	printf("Naciśnienie 'n' zakończy działanie programu.\n");
-	app_process.app_last_state = SHOW_MENU;
-	app_process.app_state = CHOSE_FUNC;
+	g_app_values.last_state = SHOW_MENU;
+	g_app_values.state = CHOSE_FUNC;
     }
     break;
     case CHOSE_FUNC: {
-      app_process.app_state = chose_func(&my_bubbles);
-      app_process.app_last_state = CHOSE_FUNC;
+      g_app_values.state = chose_func(&my_bubbles);
+      g_app_values.last_state = CHOSE_FUNC;
     }
     break;
     case SORT: {
       if( sm_bubble_sort(&my_bubbles) == 0){
-	app_process.app_state = SORT;
+	g_app_values.state = SORT;
       }else {
-	app_process.app_state = SHOW_MENU;
-	app_process.app_last_state = SORT;
+	g_app_values.state = SHOW_MENU;
+	g_app_values.last_state = SORT;
       }
     }
     break;
@@ -77,43 +75,38 @@ app(void)
       if (num > 0 && num <= 1000) {
 	bs_add_num(&my_bubbles, num);
 	printf("Dodano %d do ostatniego elementu tablicy.\n", num);
-	app_process.app_state = SHOW_MENU;
+	g_app_values.state = SHOW_MENU;
       }else {
-	  app_process.app_state = ADD_NUM_ERROR;
+	  g_app_values.state = ADD_NUM_ERROR;
       }
-      app_process.app_last_state = ADD_ONE_NUMBER;
+      g_app_values.last_state = ADD_ONE_NUMBER;
     }
     break;
     case ADD_NUM_ERROR: {
       printf("Wprowadzono liczbe spoza zakresu lub nieodpowiedni znak.\n");
-      app_process.app_state = SHOW_MENU;
-      app_process.app_last_state = ADD_NUM_ERROR;
+      g_app_values.state = SHOW_MENU;
+      g_app_values.last_state = ADD_NUM_ERROR;
 
     }
     break;
     case ADD_TEN_NUMBERS: {
       printf("Dodano %d losowych liczb\n", bs_rand_num(&my_bubbles, 10, 999));
-      app_process.app_state = SHOW_MENU;
-      app_process.app_last_state = ADD_TEN_NUMBERS;
+      g_app_values.state = SHOW_MENU;
+      g_app_values.last_state = ADD_TEN_NUMBERS;
     }
     break;
     case DISPLAY_ARRAY: {
       show_array(&my_bubbles);
-      app_process.app_state = SHOW_MENU;
-      app_process.app_last_state = DISPLAY_ARRAY;
-    }
-    break;
-    case ACCEPT_BTN: {
-      app_process.app_last_state = ACCEPT_BTN;
-
+      g_app_values.state = SHOW_MENU;
+      g_app_values.last_state = DISPLAY_ARRAY;
     }
     break;
     case CANCEL_BTN: {
-      //if(app_process.app_last_state == )
-      if(app_process.app_last_state == CHOSE_FUNC) {
-	  app_process.app_state = END;
+      //if(g_app_values.last_state == )
+      if(g_app_values.last_state == CHOSE_FUNC) {
+	  g_app_values.state = END;
       }
-      app_process.app_last_state = CANCEL_BTN;
+      g_app_values.last_state = CANCEL_BTN;
     }
     break;
     case END:
@@ -148,11 +141,6 @@ chose_func(struct Bubble_sort *my_sort)
     break;
     case 'a': {
       retval = ADD_ONE_NUMBER;
-      click = 0;
-    }
-    break;
-    case 't': {
-      retval = ACCEPT_BTN;
       click = 0;
     }
     break;

@@ -15,7 +15,7 @@
 int32_t array_to_sort[SIZE];
 
 enum {
-  STATE_INIT,
+  STATE_INIT = 1,
   SHOW_MENU,
   CHOSE_FUNC,
   SORT,
@@ -23,16 +23,15 @@ enum {
   ADD_TEN_NUMBERS,
   DISPLAY_ARRAY,
   ADD_NUM_ERROR,
-  ACCEPT_BTN,
   CANCEL_BTN,
   END
 };
 
-struct app_states {
-  int32_t app_state;
-  int32_t app_process;
-  int32_t app_last_state;
-  int32_t app_request;
+struct app {
+  int32_t state;
+  int32_t process;
+  int32_t last_state;
+  int32_t request;
 };
 
 int32_t app_init(void);
