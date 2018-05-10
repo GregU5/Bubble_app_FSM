@@ -12,11 +12,6 @@
 #include "app.h"
 #include <unistd.h>
 
-
-//BUBBLE_SORT_CREATE_STATIC_INSTANCE(my);
-
-
-
 /*
  * case : 's' - sortowanie
  * case : 'r' - dodaj 10 elementow

@@ -29,9 +29,7 @@ enum {
 
 struct app {
   int32_t state;
-  int32_t process;
   int32_t last_state;
-  int32_t request;
 };
 
 int32_t app_init(void);

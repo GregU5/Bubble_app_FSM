@@ -121,68 +121,6 @@ int32_t sm_bubble_sort(struct Bubble_sort *my_sort) {
   return retval;
 }
 
-/*
- * funkcja dodajaca n wylosowanych liczby do tablicy
- * argument my_sort, przekazanie wskaznika na strukture
- * argument no_elements -> ilość liczb do dodania
- * argument rand_max -> losuj liczbę od 1 do rand_max
- */
-int32_t
-bs_rand_num(struct Bubble_sort *my_sort, uint32_t no_elements, uint32_t rand_max)
-{
-  int32_t retval = 0;
-
-  if (my_sort->is_init == 0) {
-    return retval = -1;
-  }
-  if (no_elements > my_sort->size) {
-    return retval = -1; //bledne parametry funkcji
-  }
-  if (no_elements > my_sort->bs_counter.no_elements_to_insert) {
-    printf("\nremoved elements : %d\n", no_elements - my_sort->bs_counter.no_elements_to_insert);
-    no_elements = no_elements - (no_elements - my_sort->bs_counter.no_elements_to_insert);
-
-  }
-
-  uint32_t last_index = my_sort->bs_counter.no_last_element;
-
-  int i;
-  for(i = 0; i < no_elements; i++ ) {
-    my_sort->tab[last_index] = (rand() % rand_max) + 1;
-    last_index++;
-  }
-
-  my_sort->bs_counter.no_last_element = last_index;
-  my_sort->bs_counter.no_elements_to_insert-= no_elements;
-  if(!no_elements) {
-      printf("Tablica jest pelna. Nie można dodac liczb!\n");
-  }
-
-  return retval = no_elements;
-}
-
-int32_t
-bs_add_num(struct Bubble_sort *my_sort, int32_t new_var)
-{
-  int32_t retval = 0;
-  if (my_sort->is_init != 1) {
-      return retval - 1;
-  }
-
-  uint32_t no_last_element = my_sort->bs_counter.no_last_element;
-  if (no_last_element > my_sort->size) {
-    printf("\nBrak miejsca!\n");
-    return retval = -1;
-  }
-  uint32_t array_index = no_last_element;
-
-  my_sort->tab[array_index] =  new_var;
-  my_sort->bs_counter.no_last_element = ++no_last_element;
-
-  my_sort->bs_counter.no_elements_to_insert = my_sort->size - no_last_element;
-
-  return retval;
-}
 
 void
 swap_elements(int32_t *tab1, int32_t *tab2)
