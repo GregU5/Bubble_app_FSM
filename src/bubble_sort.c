@@ -20,7 +20,7 @@ enum {
  * return 0 bubble sort init success
  */
 int32_t
-bubble_sort_init(struct Bubble_sort *my_sort, int32_t *data, uint32_t size)
+bs_init(struct Bubble_sort *my_sort, int32_t *data, uint32_t size)
 {
   int32_t retval = -1;
   if ( my_sort->is_init == 1) {
@@ -113,6 +113,27 @@ int32_t sm_bubble_sort(struct Bubble_sort *my_sort) {
   return retval;
 }
 
+int32_t
+bs_is_init(struct Bubble_sort *my_sort)
+{
+  int32_t retval;
+  if (my_sort->is_init > 0) {
+    retval = 1;
+  }else {
+    retval = -1;
+  }
+
+  return retval;
+}
+
+uint32_t
+bs_get_array_size(struct Bubble_sort *my_sort)
+{
+  uint32_t retval;
+  retval = my_sort->size;
+  return retval;
+}
+
 void
 swap_elements(int32_t *tab1, int32_t *tab2)
 {
@@ -121,4 +142,15 @@ swap_elements(int32_t *tab1, int32_t *tab2)
   *tab1 = *tab2;
   *tab2 = tmp;
 }
-
+void
+bs_show_array(struct Bubble_sort *my_sort)
+{
+  if (my_sort->bs_counter.no_last_element == 0) {
+    printf("TABLICA JEST PUSTA!\n");
+  }
+  for(int i = 0; i < my_sort->bs_counter.no_last_element; i++) {
+      printf("tablica[%d] = %d\n", i, my_sort->tab[i]);
+  }
+  printf("Number of last element: %d\n", my_sort->bs_counter.no_last_element);
+  printf("Number of elements to insert: %d\n", my_sort->bs_counter.no_elements_to_insert);
+}

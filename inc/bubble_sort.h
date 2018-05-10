@@ -28,7 +28,11 @@ struct Bubble_sort {
    struct bubble_counters bs_counter;	//
 };
 
-int32_t bubble_sort_init (struct Bubble_sort *my_sort, int32_t *data, uint32_t size);
+int32_t bs_init (struct Bubble_sort *my_sort, int32_t *data, uint32_t size);
 int32_t sm_bubble_sort (struct Bubble_sort *my_sort);
+int32_t bs_is_init(struct Bubble_sort *my_sort);
+uint32_t bs_get_array_size(struct Bubble_sort *my_sort);
+uint32_t bs_get_no_lst_element(struct Bubble_sort *my_sort);
+void bs_show_array (struct Bubble_sort *my_sort);
 
 #endif /* BUBBLE_SORT_H_ */

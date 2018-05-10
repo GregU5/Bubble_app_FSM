@@ -6,20 +6,19 @@
  */
 #include "app.h"
 
-struct app g_app_values;
+struct app g_app;
 struct Bubble_sort my_bubbles;
 
 static int32_t app_rand_nums (struct Bubble_sort *my_sort, uint32_t no_elements, uint32_t rand_max);
 static int32_t app_add_num(struct Bubble_sort *my_sort, int32_t new_var);
-static void show_array (struct Bubble_sort *my_sort);
 
 int32_t
 app_init(void)
 {
   int32_t retval = 0;
   printf("Program do sortowania bablekowego.\n");
-  g_app_values.state = STATE_INIT;
-  g_app_values.last_state = 0;
+  g_app.state = STATE_INIT;
+  g_app.last_state = 0;
 
   return retval;
 }
@@ -29,14 +28,14 @@ app(void)
 {
   int32_t retval = 0;
 
-  switch(g_app_values.state) {
+  switch(g_app.state) {
     case STATE_INIT: {
-      int32_t is_init = bubble_sort_init(&my_bubbles, array_to_sort, SIZE);
+      int32_t is_init = bs_init(&my_bubbles, array_to_sort, SIZE);
       if(is_init < 0) {
-	g_app_values.state = -1;
+	g_app.state = -1;
 	printf("\n BUBBLE STRUCT INIT ERROR\n");
       }else {
-	g_app_values.state = SHOW_MENU;
+	g_app.state = SHOW_MENU;
       }
     }
     break;
@@ -50,21 +49,21 @@ app(void)
 	  );
 
       printf("Naciśnienie 'n' zakończy działanie programu.\n");
-      g_app_values.last_state = SHOW_MENU;
-      g_app_values.state = CHOSE_FUNC;
+      g_app.last_state = SHOW_MENU;
+      g_app.state = CHOSE_FUNC;
     }
     break;
     case CHOSE_FUNC: {
-      g_app_values.state = chose_func(&my_bubbles);
-      g_app_values.last_state = CHOSE_FUNC;
+      g_app.state = chose_func(&my_bubbles);
+      g_app.last_state = CHOSE_FUNC;
     }
     break;
     case SORT: {
       if( sm_bubble_sort(&my_bubbles) == 0){
-	g_app_values.state = SORT;
+	g_app.state = SORT;
       }else {
-	g_app_values.state = SHOW_MENU;
-	g_app_values.last_state = SORT;
+	g_app.state = SHOW_MENU;
+	g_app.last_state = SORT;
       }
     }
     break;
@@ -79,37 +78,36 @@ app(void)
 	}else {
 	  printf("Tablice jest pelna lub niezainicjalizowana!\n");
 	}
-	g_app_values.state = SHOW_MENU;
+	g_app.state = SHOW_MENU;
       }else {
-	  g_app_values.state = ADD_NUM_ERROR;
+	  g_app.state = ADD_NUM_ERROR;
       }
-      g_app_values.last_state = ADD_ONE_NUMBER;
+      g_app.last_state = ADD_ONE_NUMBER;
     }
     break;
     case ADD_NUM_ERROR: {
       printf("Wprowadzono liczbe spoza zakresu lub nieodpowiedni znak.\n");
-      g_app_values.state = SHOW_MENU;
-      g_app_values.last_state = ADD_NUM_ERROR;
+      g_app.state = SHOW_MENU;
+      g_app.last_state = ADD_NUM_ERROR;
     }
     break;
     case ADD_TEN_NUMBERS: {
       printf("Dodano %d losowych liczb\n", app_rand_nums(&my_bubbles, 10, 999));
-      g_app_values.state = SHOW_MENU;
-      g_app_values.last_state = ADD_TEN_NUMBERS;
+      g_app.state = SHOW_MENU;
+      g_app.last_state = ADD_TEN_NUMBERS;
     }
     break;
     case DISPLAY_ARRAY: {
-      show_array(&my_bubbles);
-      g_app_values.state = SHOW_MENU;
-      g_app_values.last_state = DISPLAY_ARRAY;
+      bs_show_array(&my_bubbles);
+      g_app.state = SHOW_MENU;
+      g_app.last_state = DISPLAY_ARRAY;
     }
     break;
     case CANCEL_BTN: {
-      //if(g_app_values.last_state == )
-      if(g_app_values.last_state == CHOSE_FUNC) {
-	  g_app_values.state = END;
+      if(g_app.last_state == CHOSE_FUNC) {
+	  g_app.state = END;
       }
-      g_app_values.last_state = CANCEL_BTN;
+      g_app.last_state = CANCEL_BTN;
     }
     break;
     case END:
@@ -185,10 +183,13 @@ app_rand_nums(struct Bubble_sort *my_sort, uint32_t no_elements, uint32_t rand_m
 {
   int32_t retval = 0;
 
-  if (my_sort->is_init == 0) {
+  if (bs_is_init(my_sort) < 0) {
     return retval = -1;
   }
-  if (no_elements > my_sort->size) {
+  uint32_t array_size = 0;
+  array_size = bs_get_array_size(my_sort);
+
+  if (no_elements > array_size) {
     return retval = -1; //bledne parametry funkcji
   }
   if (no_elements > my_sort->bs_counter.no_elements_to_insert) {
@@ -208,7 +209,7 @@ app_rand_nums(struct Bubble_sort *my_sort, uint32_t no_elements, uint32_t rand_m
   my_sort->bs_counter.no_last_element = last_index;
   my_sort->bs_counter.no_elements_to_insert-= no_elements;
   if(!no_elements) {
-      printf("Tablica jest pelna. Nie można dodac liczb!\n");
+    printf("Tablica jest pelna. Nie można dodac liczb!\n");
   }
 
   return retval = no_elements;
@@ -243,15 +244,3 @@ app_add_num(struct Bubble_sort *my_sort, int32_t new_var)
   return retval = new_var;
 }
 
-static void
-show_array(struct Bubble_sort *my_sort)
-{
-  if (my_sort->bs_counter.no_last_element == 0) {
-    printf("TABLICA JEST PUSTA!\n");
-  }
-  for(int i = 0; i < my_sort->bs_counter.no_last_element; i++) {
-      printf("tablica[%d] = %d\n", i, my_sort->tab[i]);
-  }
-  printf("Number of last element: %d\n", my_sort->bs_counter.no_last_element);
-  printf("Number of elements to insert: %d\n", my_sort->bs_counter.no_elements_to_insert);
-}
