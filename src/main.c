@@ -21,29 +21,18 @@
  * case : 't' - akcecptuj, dalej
  *
  */
-void show(void);
-
-struct Bubble_sort bubbles;
 
 int main(void)
 {
   app_init();
 
   while(1) {
-      if( 0 > app() ) {
-	break;
-      }
+    if (app() < 0) {
+      break;
+    }
   }
-
-  show();
 
   printf("\nEND OF PROGRAM");
 
   return EXIT_SUCCESS;
-}
-
-void show(void)
-{
-  printf("Number_of_elements left: %d\n", bubbles.bs_counter.no_elements_to_insert);
-  printf("Number of last element: %d\n\n", bubbles.bs_counter.no_last_element);
 }

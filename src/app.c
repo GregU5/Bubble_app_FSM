@@ -79,7 +79,6 @@ app(void)
 	}else {
 	  printf("Tablice jest pelna lub niezainicjalizowana!\n");
 	}
-
 	g_app_values.state = SHOW_MENU;
       }else {
 	  g_app_values.state = ADD_NUM_ERROR;
@@ -91,7 +90,6 @@ app(void)
       printf("Wprowadzono liczbe spoza zakresu lub nieodpowiedni znak.\n");
       g_app_values.state = SHOW_MENU;
       g_app_values.last_state = ADD_NUM_ERROR;
-
     }
     break;
     case ADD_TEN_NUMBERS: {
@@ -216,6 +214,12 @@ app_rand_nums(struct Bubble_sort *my_sort, uint32_t no_elements, uint32_t rand_m
   return retval = no_elements;
 }
 
+/*
+ * return -1 bubble struct not init, no place to insert numbers
+ * return -2 array full, no place to insert new number
+ * return value of inserted element
+ *
+ *  */
 int32_t
 app_add_num(struct Bubble_sort *my_sort, int32_t new_var)
 {
@@ -250,5 +254,4 @@ show_array(struct Bubble_sort *my_sort)
   }
   printf("Number of last element: %d\n", my_sort->bs_counter.no_last_element);
   printf("Number of elements to insert: %d\n", my_sort->bs_counter.no_elements_to_insert);
-
 }

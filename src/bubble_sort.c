@@ -9,7 +9,6 @@
 
 static void swap_elements(int32_t *tab1, int32_t *tab2);
 
-
 enum {
     INIT,
     BIG_FOR,
@@ -18,7 +17,7 @@ enum {
 };
 
 /* return 1 bubble sort struct already inited ( no need to init )
- * return 0 bubble sort init
+ * return 0 bubble sort init success
  */
 int32_t
 bubble_sort_init(struct Bubble_sort *my_sort, int32_t *data, uint32_t size)
@@ -27,8 +26,6 @@ bubble_sort_init(struct Bubble_sort *my_sort, int32_t *data, uint32_t size)
   if ( my_sort->is_init == 1) {
     return retval = 1;
   }
-
-//  int test = sizeof(struct Bubble_sort);
 
   if ( (my_sort != NULL) && (size != 0)) {
     my_sort->size = size;
@@ -107,20 +104,14 @@ int32_t sm_bubble_sort(struct Bubble_sort *my_sort) {
       i = 0;
       j = 1;
       retval = 1;
-
-//      if (number_of_last_element == my_sort->size) {
-//	  retval = 2;
-//      }
-
     }
   }
 
-  my_sort->bs_counter.state = b_state; //zapisanie aktualnego stanu do struktury maszyny
+  my_sort->bs_counter.state = b_state;
   my_sort->bs_counter.i = i;
   my_sort->bs_counter.j = j;
   return retval;
 }
-
 
 void
 swap_elements(int32_t *tab1, int32_t *tab2)
