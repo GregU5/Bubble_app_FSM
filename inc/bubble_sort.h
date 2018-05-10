@@ -39,8 +39,6 @@ uint32_t bs_get_free(struct Bubble_sort *my_sort);
 uint32_t bs_get_array_size(struct Bubble_sort *my_sort);
 uint32_t bs_get_lst_idx(struct Bubble_sort *my_sort);
 
-uint32_t bs_update_free(struct Bubble_sort *my_sort, uint32_t update_var);
-int32_t bs_update_lst_idx(struct Bubble_sort *my_sort, uint32_t update_var);
 void bs_show_array (struct Bubble_sort *my_sort);
 
 #endif /* BUBBLE_SORT_H_ */

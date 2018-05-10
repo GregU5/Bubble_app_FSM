@@ -117,8 +117,12 @@ int32_t sm_bubble_sort(struct Bubble_sort *my_sort) {
      }
      break;
     case END_SORT: {
+      if (my_sort->bs_counter.i == 1) {
+	printf("\nTablica jest już posortowana!\n");
+      }else {
+	printf("\nKoniec sortowania babelkowego.\n");
+      }
       my_sort->is_sorted = 1;
-      printf("\nEnd of bubble sorting\n");
       b_state = BIG_FOR;
       i = 0;
       j = 1;
@@ -134,7 +138,7 @@ int32_t sm_bubble_sort(struct Bubble_sort *my_sort) {
 
 /*
  * return -1 not init
- * return  number of elements
+ * return  idx of number
  */
 int32_t
 bs_insert(struct Bubble_sort *my_sort, int32_t new_var)
@@ -197,38 +201,6 @@ bs_get_lst_idx(struct Bubble_sort *my_sort)
   retval = bs_is_init(my_sort);
   if (retval > 0) {
     retval = my_sort->bs_counter.idx;
-  }
-  return retval;
-}
-
-/* fuction to update counter of free elements
- * return 0 updated done
- * return -1 fail
- *
- *  */
-uint32_t
-bs_update_free(struct Bubble_sort *my_sort, uint32_t update_var)
-{
-  uint32_t retval = 0;
-  retval = bs_is_init(my_sort);
-  if(retval > 0) {
-      my_sort->bs_counter.no_free_elements = update_var;
-  }
-  return retval;
-}
-
-/*
- * function to update last index of array from bubble sort
- * return 0 update done
- * return -1 fail
- */
-int32_t
-bs_update_lst_idx(struct Bubble_sort *my_sort, uint32_t update_var)
-{
-  int32_t retval = 0;
-  retval = bs_is_init(my_sort);
-  if(retval > 0) {
-      my_sort->bs_counter.idx = update_var;
   }
   return retval;
 }

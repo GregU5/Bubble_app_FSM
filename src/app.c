@@ -25,7 +25,7 @@ app_init(void)
 }
 
 int32_t
-chose_func(struct Bubble_sort *my_sort)
+app_chose_func(struct Bubble_sort *my_sort)
 {
   int32_t retval = 0;
   static uint8_t click = 0;
@@ -108,12 +108,12 @@ app(void)
     }
     break;
     case CHOSE_FUNC: {
-      g_app.state = chose_func(&my_bubbles);
+      g_app.state = app_chose_func(&my_bubbles);
       g_app.last_state = CHOSE_FUNC;
     }
     break;
     case SORT: {
-      if( sm_bubble_sort(&my_bubbles) == 0){
+      if (sm_bubble_sort(&my_bubbles) == 0){
 	g_app.state = SORT;
       }else {
 	g_app.state = SHOW_MENU;
@@ -124,11 +124,11 @@ app(void)
     case ADD_ONE_NUMBER: {
       int32_t check;
       check = app_add_num(&my_bubbles);
-      if(check < 0){
+      if (check < 0) {
        g_app.state = ADD_NUM_ERROR;
       }else {
-	if(check == 0) {
-	  printf("Brak miejsca w tablicy!");
+	if (check == 0) {
+	  printf("Brak miejsca w tablicy!\n");
 	}
 	g_app.state = SHOW_MENU;
       }
@@ -142,7 +142,11 @@ app(void)
     }
     break;
     case ADD_TEN_NUMBERS: {
-      printf("Dodano %d losowych liczb\n", app_rand_nums(&my_bubbles, 10, 999));
+      int32_t check = app_rand_nums(&my_bubbles, 10, 999);
+      printf("Dodano %d losowych liczb\n", check);
+      if(check == 0) {
+	  printf("Tablica jest pelna! Brak wolnych miejsc\n");
+      }
       g_app.state = SHOW_MENU;
       g_app.last_state = ADD_TEN_NUMBERS;
     }
@@ -184,37 +188,21 @@ app_rand_nums(struct Bubble_sort *my_sort, uint32_t no_elements, uint32_t rand_m
 {
   int32_t retval = 0;
 
-  uint32_t array_size = 0;
-  array_size = bs_get_array_size(my_sort);
-  if(array_size <= 0) {
-      return retval = -1;
+  uint32_t size;
+  size = bs_get_array_size(my_sort);
+  if ((no_elements > size) || (size  < 0)) {
+    retval = -1; // number of elements are greater tan size of array or bubble struct is not inited
   }
-
-  if (no_elements > array_size) {
-    return retval = -2; //bledne parametry funkcji
-  }
-
   uint32_t free_elements;
   free_elements = bs_get_free(my_sort);
 
   if (no_elements > free_elements) {
-    printf("\nUsuniete elementy : %d\n", no_elements - free_elements);
     no_elements = no_elements - (no_elements - free_elements);
   }
 
-  uint32_t last_index = bs_get_lst_idx(my_sort);
-
-  int i;
-  for(i = 0; i < no_elements; i++ ) {
-    my_sort->tab[last_index] = (rand() % rand_max) + 1;
-    last_index++;
-  }
-
-  bs_update_lst_idx(my_sort, last_index);
-  free_elements -= no_elements;
-  bs_update_free(my_sort, free_elements);
-  if(!no_elements) {
-    printf("Tablica jest pelna. Nie można dodac liczb!\n");
+  for(int i = 0; i < no_elements; i++) {
+    int32_t tmp = (rand() % rand_max) + 1;
+    bs_insert(my_sort,tmp);
   }
 
   return retval = no_elements;
@@ -251,9 +239,8 @@ get_num(void)
 
   if(retval > 0 && retval <= 1000) {
     return retval;
-  }else {
-    printf("Cyfra poza zakresem lub wprowadza błedny znak!\n");
   }
+
   return retval = -2;
 }
 
