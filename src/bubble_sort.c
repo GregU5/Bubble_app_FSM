@@ -38,8 +38,6 @@ bs_init(struct Bubble_sort *my_sort, int32_t *data, uint32_t size)
     my_sort->bs_counter.j = 1; //for LITTLE_FOR licznik elementów
     my_sort->bs_counter.swap_count = 0;
 
-    //my_sort->bs_counter.last_idx = 0;
-
     my_sort->is_init = 1;
     my_sort->bs_counter.state = BIG_FOR;
 
@@ -177,6 +175,7 @@ bs_get_free(struct Bubble_sort *my_sort)
   }
   return retval;
 }
+
 /* return size of the array */
 uint32_t
 bs_get_array_size(struct Bubble_sort *my_sort)
@@ -206,15 +205,6 @@ bs_get_lst_idx(struct Bubble_sort *my_sort)
 }
 
 void
-swap_elements(int32_t *tab1, int32_t *tab2)
-{
-  int32_t tmp;
-  tmp = *tab1;
-  *tab1 = *tab2;
-  *tab2 = tmp;
-}
-
-void
 bs_show_array(struct Bubble_sort *my_sort)
 {
   if (my_sort->bs_counter.idx == 0) {
@@ -226,3 +216,13 @@ bs_show_array(struct Bubble_sort *my_sort)
   printf("Number of last element: %d\n", my_sort->bs_counter.idx);
   printf("Number of elements to insert: %d\n", my_sort->bs_counter.no_free_elements);
 }
+
+void
+swap_elements(int32_t *tab1, int32_t *tab2)
+{
+  int32_t tmp;
+  tmp = *tab1;
+  *tab1 = *tab2;
+  *tab2 = tmp;
+}
+
