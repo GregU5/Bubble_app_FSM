@@ -81,9 +81,6 @@ int32_t sm_bubble_sort(struct Bubble_sort *my_sort) {
 
   if (my_sort->is_sorted != 0) {
 
-    if ( (number_of_last_element == my_sort->size) ) {
-      return retval = 2;
-    }
     my_sort->is_sorted = 0;
   }
 
